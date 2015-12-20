@@ -1,96 +1,71 @@
 package cl.sebapincheira.android.popularmovies;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityMain extends AppCompatActivity {
 
-    private final String LOG_TAG = ActivityMain.class.getSimpleName();
-    public RecyclerView.Adapter vAdapterLocal = new AdapterGrid();
-    RecyclerView vRecyclerView;
-    RecyclerView.LayoutManager vLayoutManager;
-    CloudFetchMovieList vCloudMovieList;
     private Toolbar vToolbar_main;
-    private ProgressBar vProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Setup toolbar
         vToolbar_main = (Toolbar) findViewById(R.id.xml_activity_main_toolbar); // Attaching the layout to the vToolbar_main object
         setSupportActionBar(vToolbar_main); // Setting vToolbar_main as the ActionBar with setSupportActionBar() call
 
-        //Progress bar
-        vProgressBar = (ProgressBar) findViewById(R.id.xml_activity_main_progress_bar);
+        //Setup viewPager + Adapter + Fragments for this viewPager
+        ViewPager viewPager = (ViewPager) findViewById(R.id.xml_activity_main_viewpager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(new FragmentMainMovieGrid(), "POPULAR");
+        viewPagerAdapter.addFragment(new FragmentMainMovieGrid(), "POPULAR2");
+        viewPagerAdapter.addFragment(new FragmentMainMovieGrid(), "POPULAR3");
+        viewPager.setAdapter(viewPagerAdapter);
 
-        // Calling the RecyclerView
-        vRecyclerView = (RecyclerView) findViewById(R.id.xml_activity_main_recycler_view);
-        vRecyclerView.setHasFixedSize(true);
+        //Setup Tabs
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.xml_activity_main_tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
-        // The number of Columns
-        vLayoutManager = new GridLayoutManager(this, 2);
-        vRecyclerView.setLayoutManager(vLayoutManager);
-
-
-        //Load data from theMovieDB only when I don't have it.
-        if (vAdapterLocal.getItemCount() == 0) {
-
-            //Load MovieList
-            vCloudMovieList = new FetchGrid("popular");
-            vCloudMovieList.getMovieList();
-            vProgressBar.setVisibility(View.VISIBLE);
-
-        } else {
-            vProgressBar.setVisibility(View.GONE);
-        }
-
-
-        //vAdapterLocal.getItemCount();
-
-        //Set adapter
-        vRecyclerView.setAdapter(vAdapterLocal);
     }
 
-    public class FetchGrid extends CloudFetchMovieList {
+    static class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public FetchGrid(String iMovieTypeList) {
-            super(iMovieTypeList);
+        public ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
 
         @Override
-        protected void onPostExecute(AdapterGrid iResult) {
-
-
-            if (iResult != null) {
-                Log.i(LOG_TAG, "HOLA: " + "Movie list fetch finished! " + iResult.getItemCount());
-
-
-                vAdapterLocal = iResult;
-
-
-                vRecyclerView.setAdapter(vAdapterLocal);
-
-
-                Toast.makeText(getApplicationContext(), "Movie list fetch finished!", Toast.LENGTH_SHORT).show();
-
-
-            } else {
-                Log.i(LOG_TAG, "HOLA: " + "There was a problem fetching movie list");
-                Toast.makeText(getApplicationContext(), "There was a problem fetching movie list", Toast.LENGTH_SHORT).show();
-            }
-
-            vProgressBar.setVisibility(View.GONE);
-
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
         }
 
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
     }
+
 }
