@@ -17,6 +17,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ActivityMovieDetail"
+            android:label="@string/title_activity_activity_detail_movie"
+            android:parentActivityName=".ActivityMain"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cl.sebapincheira.android.popularmovies.ActivityMain" />
+        </activity>
     </application>
 
 </manifest>

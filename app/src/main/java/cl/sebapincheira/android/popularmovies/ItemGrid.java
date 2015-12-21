@@ -7,10 +7,10 @@ import android.widget.ImageView;
  */
 public class ItemGrid {
 
-    String mMovieName;
+    String mMovieTitle;
     String mMovieId;
-    String mImageURI;
-    String mImageURIBackdrop;
+    String mPosterURI;
+    String mBackdropURI;
     String mReleaseDate;
     String mVoteAverage;
 
@@ -19,15 +19,15 @@ public class ItemGrid {
     public ItemGrid(String iMovieId, String iMovieName, String iImageURI,
                     String iImageURIBackdrop, String iReleaseDate, String iVoteAverage) {
         this.mMovieId = iMovieId;
-        this.mMovieName = iMovieName;
-        this.mImageURI = "http://image.tmdb.org/t/p/w500" + iImageURI;
-        this.mImageURIBackdrop = "http://image.tmdb.org/t/p/w500" + iImageURIBackdrop;
+        this.mMovieTitle = iMovieName;
+        this.mPosterURI = "http://image.tmdb.org/t/p/w500" + iImageURI;
+        this.mBackdropURI = "http://image.tmdb.org/t/p/w500" + iImageURIBackdrop;
         this.mReleaseDate = iReleaseDate;
         this.mVoteAverage = iVoteAverage;
     }
 
     public String getName() {
-        return mMovieName;
+        return mMovieTitle;
     }
 
 
