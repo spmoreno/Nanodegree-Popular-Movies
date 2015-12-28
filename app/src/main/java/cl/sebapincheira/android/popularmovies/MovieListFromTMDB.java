@@ -32,7 +32,7 @@ public class MovieListFromTMDB extends AsyncTask<String, Void, List<MovieItemGri
 
     private static final String LOG_TAG = MovieListFromTMDB.class.getSimpleName();
     private static final String TMDB_BASE_URI = "api.themoviedb.org";
-    private static final String TMDB_API_KEY = "8e71506cc60733a93af716fa009cbc38";
+    private static final String TMDB_API_KEY = "";
     private static final String TMDB_IMAGES_BASE_POSTER_URI = "http://image.tmdb.org/t/p/w185";
     private static final String TMDB_IMAGES_BASE_BACKDROP_URI = "http://image.tmdb.org/t/p/w500";
 
