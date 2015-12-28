@@ -1,31 +1,34 @@
 package cl.sebapincheira.android.popularmovies;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Seba on 12/12/2015.
  * Examples provided by http://www.exoguru.com/android/ui/recyclerview/custom-android-grids-using-recyclerview.html
  */
-public class AdapterGrid extends RecyclerView.Adapter<AdapterGrid.ViewHolder> {
+public class MovieAdapterGrid extends RecyclerView.Adapter<MovieAdapterGrid.ViewHolder> {
 
-    public final List<ItemGrid> vMovieList = new ArrayList<ItemGrid>();
+    public static final String LOG_TAG = MovieAdapterGrid.class.getName();
     public final _Util mUtil = new _Util();
+    public List<MovieItemGrid> vMovieList = new ArrayList<MovieItemGrid>();
 
-    public AdapterGrid() {
+    public MovieAdapterGrid() {
         super();
 
     }
@@ -40,9 +43,9 @@ public class AdapterGrid extends RecyclerView.Adapter<AdapterGrid.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        final ItemGrid mItemGridSelected = vMovieList.get(position);
+        final MovieItemGrid mMovieItemGridSelected = vMovieList.get(position);
 
-        if (mUtil.isMaterialAvailable()) {
+        if (mUtil.isMaterial()) {
             //Set TransitionName for Material animation
             viewHolder.mImageViewMovie.setTransitionName("pt" + String.valueOf(position));
         }
@@ -55,22 +58,33 @@ public class AdapterGrid extends RecyclerView.Adapter<AdapterGrid.ViewHolder> {
                 String mTransitionName = "";
                 ImageView iV = (ImageView) v.findViewById(R.id.img_thumbnail);
 
-                if (mUtil.isMaterialAvailable()) {
+                if (mUtil.isMaterial()) {
                     mTransitionName = iV.getTransitionName();
                 }
 
+                //Data to send to movie detail activity
                 Intent intent = new Intent(context, ActivityMovieDetail.class);
-                intent.putExtra(ActivityMovieDetail.CONS_MOVIE_ID, mItemGridSelected.mMovieId);
-                intent.putExtra(ActivityMovieDetail.CONS_MOVIE_TITLE, mItemGridSelected.mMovieTitle);
-                intent.putExtra(ActivityMovieDetail.CONS_POSTER_URI, mItemGridSelected.mPosterURI);
-                intent.putExtra(ActivityMovieDetail.CONS_BACKDROP_URI, mItemGridSelected.mBackdropURI);
+                intent.putExtra(ActivityMovieDetail.INTENT_MOVIE_ID, mMovieItemGridSelected.getMovieId());
+                intent.putExtra(ActivityMovieDetail.INTENT_MOVIE_TITLE, mMovieItemGridSelected.getMovieTitle());
+                intent.putExtra(ActivityMovieDetail.INTENT_POSTER_URI, mMovieItemGridSelected.getPosterURI());
+                intent.putExtra(ActivityMovieDetail.INTENT_BACKDROP_URI, mMovieItemGridSelected.getBackdropURI());
+                Date releaseDateTemp = mMovieItemGridSelected.getReleaseDate();
+                Long releaseDate = null;
+                if (releaseDateTemp != null) {
+                    releaseDate = releaseDateTemp.getTime();
+                }
+                intent.putExtra(ActivityMovieDetail.INTENT_RELEASE_DATE, releaseDate);
+                intent.putExtra(ActivityMovieDetail.INTENT_OVERVIEW, mMovieItemGridSelected.getOverview());
+                intent.putExtra(ActivityMovieDetail.INTENT_VOTE_AVERAGE, mMovieItemGridSelected.getVoteAverage());
 
-                if (mUtil.isMaterialAvailable()) {
 
-                    intent.putExtra(ActivityMovieDetail.CONS_TRANSITION_NAME, mTransitionName);
+                if (mUtil.isMaterial()) {
 
-                    /* Transition animation -- Used the same TranstionName on both imageviews (origin-target) */
-                    Bundle vBundle = ActivityOptions
+
+                    intent.putExtra(ActivityMovieDetail.INTENT_TRANSITION_NAME, mTransitionName);
+
+                    /* Shared Object animation -- Used the same TranstionName on both imageviews (origin-target) */
+                    Bundle vBundle = ActivityOptionsCompat
                             .makeSceneTransitionAnimation((ActivityMain) context, iV, mTransitionName)
                             .toBundle();
 
@@ -85,13 +99,21 @@ public class AdapterGrid extends RecyclerView.Adapter<AdapterGrid.ViewHolder> {
 
         //Load poster image
         Glide.with(viewHolder.mImageViewMovie.getContext())
-                .load(mItemGridSelected.mPosterURI)
+                .load(mMovieItemGridSelected.getPosterURI())
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        //.placeholder(R.drawable.alert_outline)
                 .into(viewHolder.mImageViewMovie);
+
+        Log.i(LOG_TAG, "MIRA: " + mMovieItemGridSelected.getPosterURI());
     }
 
     @Override
     public int getItemCount() {
         return vMovieList.size();
+    }
+
+    public void setMovieList(List<MovieItemGrid> iMovieList) {
+        vMovieList = iMovieList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

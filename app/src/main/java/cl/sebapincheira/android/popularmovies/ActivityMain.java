@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ActivityMain extends AppCompatActivity {
 
-    private Toolbar vToolbar_main;
+    private static final String LOG_TAG = ActivityMain.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +22,28 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Setup toolbar
-        vToolbar_main = (Toolbar) findViewById(R.id.xml_activity_main_toolbar); // Attaching the layout to the vToolbar_main object
-        setSupportActionBar(vToolbar_main); // Setting vToolbar_main as the ActionBar with setSupportActionBar() call
+        Toolbar toolbarMain = (Toolbar) findViewById(R.id.xml_activity_main_toolbar); // Attaching the layout to the toolbar_main object
+        setSupportActionBar(toolbarMain); // Setting toolbar_main as the ActionBar with setSupportActionBar() call
 
         //Setup viewPager + Adapter + Fragments for this viewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.xml_activity_main_viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new FragmentMainMovieGrid(), "POPULAR");
-        viewPagerAdapter.addFragment(new FragmentMainMovieGrid(), "POPULAR2");
-        viewPagerAdapter.addFragment(new FragmentMainMovieGrid(), "POPULAR3");
+
+        /*
+        How-to pass info to a fragment
+        http://stackoverflow.com/questions/17436298/how-to-pass-a-variable-from-activity-to-fragment-and-pass-it-back
+         */
+        Fragment fragmentPopular = new FragmentMainMovieGrid();
+        Bundle bundlePopular = new Bundle();
+        bundlePopular.putInt("fragment_type", FragmentMainMovieGrid.FRAGMENT_TYPE_MOST_POPULAR);
+        fragmentPopular.setArguments(bundlePopular);
+        viewPagerAdapter.addFragment(fragmentPopular, "MOST POPULAR");
+
+        Fragment fragmentHighest = new FragmentMainMovieGrid();
+        Bundle bundleHighest = new Bundle();
+        bundleHighest.putInt("fragment_type", FragmentMainMovieGrid.FRAGMENT_TYPE_HIGHEST_RATED);
+        fragmentHighest.setArguments(bundleHighest);
+        viewPagerAdapter.addFragment(fragmentHighest, "HIGHEST RATED");
         viewPager.setAdapter(viewPagerAdapter);
 
         //Setup Tabs

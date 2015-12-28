@@ -6,10 +6,29 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"></style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+
+    <!--
+    ExpandedAppBar is for hide the title when collapsing toolbar (DetailActivity) is expanded
+    http://stackoverflow.com/questions/31039310/font-for-collapsingtoolbarlayout
+    -->
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
+    <style name="MovieDetailsTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ItalicText">
+        <item name="android:textStyle">italic</item>
+    </style>
+
 
 </resources>
