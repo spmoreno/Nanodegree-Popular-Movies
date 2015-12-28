@@ -7,6 +7,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!--Prevents navigation bar overlay content
+        http://stackoverflow.com/questions/28693442/android-lollipop-navigation-bar-overlays-activity-view
+        -->
         <item name="android:windowContentTransitions">true</item>
 
         <!-- enable overlapping of exiting and entering activities-->
